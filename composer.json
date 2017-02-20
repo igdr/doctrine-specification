@@ -1,0 +1,27 @@
+{
+    "name": "igdr/doctrine-specification",
+    "type": "library",
+    "description": "Specification Pattern for your Doctrine repositories",
+    "keywords": [
+        "Doctrine",
+        "Repository",
+        "Specification",
+        "Criteria"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Igor Drozd",
+            "email": "drozd.igor@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "doctrine/orm": ">=2.2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Igdr\\DoctrineSpecification\\": "src/"
+        }
+    }
+}
