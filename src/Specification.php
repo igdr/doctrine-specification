@@ -5,6 +5,7 @@ namespace Igdr\DoctrineSpecification;
 use Igdr\DoctrineSpecification\Expr\CompositeExpression;
 use Igdr\DoctrineSpecification\Expr\ExpressionBuilder;
 use Igdr\DoctrineSpecification\Expr\ExpressionInterface;
+use Igdr\DoctrineSpecification\QueryModifier\Count;
 use Igdr\DoctrineSpecification\QueryModifier\GroupBy;
 use Igdr\DoctrineSpecification\QueryModifier\Having;
 use Igdr\DoctrineSpecification\QueryModifier\InnerJoin;
@@ -66,7 +67,10 @@ class Specification
      */
     public function select(string $select)
     {
-        $this->queryModifiers[] = new Select($select);
+        $key = sprintf('select_%s', $select);
+        if (false === isset($this->queryModifiers[$key])) {
+            $this->queryModifiers[$key] = new Select($select);
+        }
 
         return $this;
     }
@@ -165,12 +169,13 @@ class Specification
      * @param string      $field
      * @param string      $newAlias
      * @param string|null $dqlAlias
+     * @param string|null $condition
      *
      * @return $this
      */
-    public function innerJoin(string $field, string $newAlias, string $dqlAlias = null)
+    public function innerJoin(string $field, string $newAlias, string $dqlAlias = null, string $condition = null)
     {
-        return $this->join(InnerJoin::class, $field, $newAlias, $dqlAlias);
+        return $this->join(InnerJoin::class, $field, $newAlias, $dqlAlias, $condition);
     }
 
     /**
@@ -206,7 +211,10 @@ class Specification
      */
     public function orderBy(string $field, string $order = 'ASC', string $dqlAlias = null)
     {
-        $this->queryModifiers[] = new OrderBy($field, $order, $dqlAlias);
+        $key = sprintf('order_%s', $field);
+        if (false === isset($this->queryModifiers[$key])) {
+            $this->queryModifiers[$key] = new OrderBy($field, $order, $dqlAlias);
+        }
 
         return $this;
     }
@@ -219,7 +227,10 @@ class Specification
      */
     public function groupBy(string $field, string $dqlAlias = null)
     {
-        $this->queryModifiers[] = new GroupBy($field, $dqlAlias);
+        $key = sprintf('group_%s', $field);
+        if (false === isset($this->queryModifiers[$key])) {
+            $this->queryModifiers[$key] = new GroupBy($field, $dqlAlias);
+        }
 
         return $this;
     }
@@ -231,7 +242,26 @@ class Specification
      */
     public function having(ExpressionInterface $expression)
     {
-        $this->queryModifiers[] = new Having($expression);
+        $key = sprintf('having_%s', $expression);
+        if (false === isset($this->queryModifiers[$key])) {
+            $this->queryModifiers[$key] = new Having($expression);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string      $field
+     * @param string|null $dqlAlias
+     *
+     * @return $this
+     */
+    public function count(string $field = 'id', string $dqlAlias = null)
+    {
+        $key = sprintf('count_%s', $field);
+        if (false === isset($this->queryModifiers[$key])) {
+            $this->queryModifiers[$key] = new Count($field, $dqlAlias);
+        }
 
         return $this;
     }
@@ -241,14 +271,15 @@ class Specification
      * @param string      $field
      * @param string      $newAlias
      * @param string|null $dqlAlias
+     * @param string|null $condition
      *
      * @return $this
      */
-    private function join(string $type, $field, $newAlias, $dqlAlias = null)
+    private function join(string $type, string $field, string $newAlias, string $dqlAlias = null, string $condition = null)
     {
-        $key = 'join_'.$field;
+        $key = sprintf('join_%s', $field);
         if (false === isset($this->queryModifiers[$key])) {
-            $this->queryModifiers[$key] = new $type($field, $newAlias, $dqlAlias);
+            $this->queryModifiers[$key] = new $type($field, $newAlias, $dqlAlias, $condition);
         }
 
         return $this;
