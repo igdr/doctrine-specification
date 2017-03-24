@@ -21,22 +21,15 @@ class EntitySpecificationRepository extends EntityRepository implements EntitySp
     /**
      * {@inheritdoc}
      */
-    public function match(Specification $specification, ResultTransformerInterface $transformer = null, ResultModifierInterface $modifier = null)
+    public function match(SpecificationInterface $specification, ResultTransformerInterface $resultTransformer = null, ResultModifierInterface $resultModifier = null)
     {
-        $query = $this->getQuery($specification, $modifier);
-        $result = $query->execute();
-
-        if ($transformer instanceof ResultTransformerInterface) {
-            $result = $transformer->transform($result);
-        }
-
-        return $result;
+        return new LazySpecificationCollection($this, $specification, $resultModifier, $resultTransformer);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function matchSingleResult(Specification $specification, ResultTransformerInterface $transformer = null, ResultModifierInterface $modifier = null)
+    public function matchSingleResult(SpecificationInterface $specification, ResultTransformerInterface $transformer = null, ResultModifierInterface $modifier = null)
     {
         $result = $this->getQuery($specification, $modifier)->getSingleResult();
 
@@ -50,7 +43,7 @@ class EntitySpecificationRepository extends EntityRepository implements EntitySp
     /**
      * {@inheritdoc}
      */
-    public function matchOneOrNullResult(Specification $specification, ResultTransformerInterface $transformer = null, ResultModifierInterface $modifier = null)
+    public function matchOneOrNullResult(SpecificationInterface $specification, ResultTransformerInterface $transformer = null, ResultModifierInterface $modifier = null)
     {
         try {
             return $this->matchSingleResult($specification, $transformer, $modifier);
@@ -62,12 +55,22 @@ class EntitySpecificationRepository extends EntityRepository implements EntitySp
     /**
      * {@inheritdoc}
      */
-    public function getQuery(Specification $specification, ResultModifierInterface $modifier = null): \Doctrine\ORM\Query
+    public function getQueryBuilder(SpecificationInterface $specification): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder($this->alias);
 
         //apply specification to the query builder
         SpecificationApplier::apply($specification, $queryBuilder, $this->getAlias());
+
+        return $queryBuilder;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getQuery(SpecificationInterface $specification, ResultModifierInterface $modifier = null): \Doctrine\ORM\Query
+    {
+        $queryBuilder = $this->getQueryBuilder($specification);
 
         $query = $queryBuilder->getQuery();
         if ($modifier !== null) {

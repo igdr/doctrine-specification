@@ -4,18 +4,19 @@ namespace Igdr\DoctrineSpecification;
 
 use Doctrine\ORM\QueryBuilder;
 
-
 /**
  * Apply specification to QueryBuilder
  */
 class SpecificationApplier
 {
     /**
-     * @param \Igdr\DoctrineSpecification\Specification $specification
-     * @param \Doctrine\ORM\QueryBuilder                $queryBuilder
-     * @param string                                    $alias
+     * @todo replace to some builder class for building Doctrine Query Builder
+     *
+     * @param SpecificationInterface     $specification
+     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param string                     $alias
      */
-    public static function apply(Specification $specification, QueryBuilder $queryBuilder, string $alias = null)
+    public static function apply(SpecificationInterface $specification, QueryBuilder $queryBuilder, string $alias = null)
     {
         if (null === $alias) {
             $alias = $queryBuilder->getRootAliases()[0];

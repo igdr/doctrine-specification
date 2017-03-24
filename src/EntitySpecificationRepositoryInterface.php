@@ -4,6 +4,7 @@ namespace Igdr\DoctrineSpecification;
 
 use Doctrine\Common\Collections\Selectable;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ORM\QueryBuilder;
 use Igdr\DoctrineSpecification\ResultModifier\ResultModifierInterface;
 use Igdr\DoctrineSpecification\ResultTransformer\ResultTransformerInterface;
 
@@ -15,18 +16,18 @@ interface EntitySpecificationRepositoryInterface extends ObjectRepository, Selec
     /**
      * Get results when you match with a Specification.
      *
-     * @param Specification              $specification
-     * @param ResultTransformerInterface $transformer
-     * @param ResultModifierInterface    $modifier
+     * @param SpecificationInterface     $specification
+     * @param ResultTransformerInterface $resultTransformer
+     * @param ResultModifierInterface    $resultModifier
      *
-     * @return mixed[]
+     * @return LazySpecificationCollection
      */
-    public function match(Specification $specification, ResultTransformerInterface $transformer = null, ResultModifierInterface $modifier = null);
+    public function match(SpecificationInterface $specification, ResultTransformerInterface $resultTransformer = null, ResultModifierInterface $resultModifier = null);
 
     /**
      * Get single result when you match with a Specification.
      *
-     * @param Specification              $specification
+     * @param SpecificationInterface     $specification
      * @param ResultTransformerInterface $transformer
      * @param ResultModifierInterface    $modifier
      *
@@ -35,12 +36,12 @@ interface EntitySpecificationRepositoryInterface extends ObjectRepository, Selec
      *
      * @return mixed
      */
-    public function matchSingleResult(Specification $specification, ResultTransformerInterface $transformer = null, ResultModifierInterface $modifier = null);
+    public function matchSingleResult(SpecificationInterface $specification, ResultTransformerInterface $transformer = null, ResultModifierInterface $modifier = null);
 
     /**
      * Get single result or null when you match with a Specification.
      *
-     * @param Specification              $specification
+     * @param SpecificationInterface     $specification
      * @param ResultTransformerInterface $transformer
      * @param ResultModifierInterface    $modifier
      *
@@ -48,13 +49,24 @@ interface EntitySpecificationRepositoryInterface extends ObjectRepository, Selec
      *
      * @return mixed|null
      */
-    public function matchOneOrNullResult(Specification $specification, ResultTransformerInterface $transformer = null, ResultModifierInterface $modifier = null);
+    public function matchOneOrNullResult(SpecificationInterface $specification, ResultTransformerInterface $transformer = null, ResultModifierInterface $modifier = null);
 
     /**
-     * @param Specification                $specification
+     * Get doctrine query for execution
+     *
+     * @param SpecificationInterface       $specification
      * @param ResultModifierInterface|null $modifier
      *
      * @return \Doctrine\ORM\Query
      */
-    public function getQuery(Specification $specification, ResultModifierInterface $modifier = null): \Doctrine\ORM\Query;
+    public function getQuery(SpecificationInterface $specification, ResultModifierInterface $modifier = null): \Doctrine\ORM\Query;
+
+    /**
+     * Get query builder with applied specification
+     *
+     * @param \Igdr\DoctrineSpecification\SpecificationInterface $specification
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getQueryBuilder(SpecificationInterface $specification): QueryBuilder;
 }

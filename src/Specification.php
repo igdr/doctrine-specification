@@ -20,7 +20,7 @@ use Igdr\DoctrineSpecification\Visitor\VisitorInterface;
 /**
  * Specification
  */
-class Specification
+class Specification implements SpecificationInterface
 {
     /**
      * @var QueryModifierInterface[]
