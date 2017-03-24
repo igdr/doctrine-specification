@@ -20,10 +20,19 @@ class SpecificationApplier
         if (null === $alias) {
             $alias = $queryBuilder->getRootAliases()[0];
         }
+
+        //visitors
+        $visitors = $specification->getVisitors();
+        foreach ((array) $visitors as $visitor) {
+            $visitor->visit($specification);
+        }
+
+        //expressions
         if ($where = $specification->getWhereExpression()) {
             $queryBuilder->where($where->getExpr($queryBuilder, $alias));
         }
 
+        //query modifiers
         $modifiers = $specification->getQueryModifiers();
         foreach ((array) $modifiers as $modifier) {
             $modifier->modify($queryBuilder, $alias);

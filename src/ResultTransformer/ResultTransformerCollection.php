@@ -8,7 +8,7 @@ namespace Igdr\DoctrineSpecification\ResultTransformer;
 class ResultTransformerCollection implements ResultTransformerInterface
 {
     /**
-     * @var ResultModifierInterface[]
+     * @var ResultTransformerInterface[]
      */
     private $transformers;
 

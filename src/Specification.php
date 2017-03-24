@@ -15,6 +15,7 @@ use Igdr\DoctrineSpecification\QueryModifier\Offset;
 use Igdr\DoctrineSpecification\QueryModifier\OrderBy;
 use Igdr\DoctrineSpecification\QueryModifier\QueryModifierInterface;
 use Igdr\DoctrineSpecification\QueryModifier\Select;
+use Igdr\DoctrineSpecification\Visitor\VisitorInterface;
 
 /**
  * Specification
@@ -30,6 +31,11 @@ class Specification
      * @var ExpressionInterface
      */
     private $expression;
+
+    /**
+     * @var VisitorInterface[]
+     */
+    private $visitors;
 
     /**
      * @var ExpressionBuilder
@@ -264,6 +270,26 @@ class Specification
         }
 
         return $this;
+    }
+
+    /**
+     * @param VisitorInterface $visitor
+     *
+     * @return $this
+     */
+    public function addVisitor(VisitorInterface $visitor)
+    {
+        $this->visitors[] = $visitor;
+
+        return $this;
+    }
+
+    /**
+     * @return VisitorInterface[]
+     */
+    public function getVisitors(): array
+    {
+        return (array) $this->visitors;
     }
 
     /**

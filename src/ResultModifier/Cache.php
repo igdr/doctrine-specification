@@ -5,7 +5,7 @@ namespace Igdr\DoctrineSpecification\ResultModifier;
 use Doctrine\ORM\AbstractQuery;
 
 /**
- * Add case parameters to query
+ * Add cache parameters to query
  */
 class Cache implements ResultModifierInterface
 {
