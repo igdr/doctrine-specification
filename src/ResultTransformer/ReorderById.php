@@ -5,7 +5,7 @@ namespace Igdr\DoctrineSpecification\ResultTransformer;
 /**
  * Reorders result collection by ids which are provided in constructor
  */
-class ReorderByIds implements ResultTransformerInterface
+class ReorderById implements ResultTransformerInterface
 {
     /**
      * @var array
