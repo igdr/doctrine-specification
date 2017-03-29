@@ -3,7 +3,7 @@
 namespace Igdr\DoctrineSpecification\ResultTransformer;
 
 /**
- * Transform result as associative array with key which pass as constuctor parameter
+ * Fetch from the result only values with id key which pass as constuctor parameter
  */
 class OnlyId extends OnlyKey
 {

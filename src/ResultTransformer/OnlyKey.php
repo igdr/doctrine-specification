@@ -5,7 +5,7 @@ namespace Igdr\DoctrineSpecification\ResultTransformer;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * Transform result as associative array with key which pass as constuctor parameter
+ * Fetch from the result only values with key which pass as constuctor parameter
  */
 class OnlyKey implements ResultTransformerInterface
 {

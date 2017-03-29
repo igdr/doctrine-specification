@@ -20,10 +20,10 @@ class Visitor implements VisitorInterface
     private $field;
 
     /**
-     * @param Specification $visitor
-     * @param string        $field
+     * @param SpecificationInterface $visitor
+     * @param string                 $field
      */
-    public function __construct(Specification $visitor, string $field)
+    public function __construct(SpecificationInterface $visitor, string $field)
     {
         $this->visitor = $visitor;
         $this->field = $field;

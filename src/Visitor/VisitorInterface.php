@@ -3,6 +3,7 @@
 namespace Igdr\DoctrineSpecification\Visitor;
 
 use Igdr\DoctrineSpecification\Specification;
+use Igdr\DoctrineSpecification\SpecificationInterface;
 
 /**
  * VisitorInterface
@@ -14,5 +15,5 @@ interface VisitorInterface
      *
      * @return void
      */
-    public function visit(Specification $specification): void;
+    public function visit(SpecificationInterface $specification): void;
 }
