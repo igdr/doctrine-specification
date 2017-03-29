@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Adds to the query LIMIT construction
  */
-class Limit implements QueryModifierInterface
+class Limit extends AbstractQueryModifier
 {
     /**
      * @var int limit

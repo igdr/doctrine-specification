@@ -109,10 +109,10 @@ class Specification implements SpecificationInterface
             return $this->where($expression);
         }
 
-        $this->expression = new CompositeExpression(CompositeExpression::TYPE_AND, array(
+        $this->expression = new CompositeExpression(CompositeExpression::TYPE_AND, [
             $this->expression,
             $expression,
-        ));
+        ]);
 
         return $this;
     }
@@ -131,10 +131,10 @@ class Specification implements SpecificationInterface
             return $this->where($expression);
         }
 
-        $this->expression = new CompositeExpression(CompositeExpression::TYPE_OR, array(
+        $this->expression = new CompositeExpression(CompositeExpression::TYPE_OR, [
             $this->expression,
             $expression,
-        ));
+        ]);
 
         return $this;
     }
@@ -290,6 +290,23 @@ class Specification implements SpecificationInterface
     public function getVisitors(): array
     {
         return (array) $this->visitors;
+    }
+
+    /**
+     * @param QueryModifierInterface[] $queryModifiers
+     *
+     * @return \Igdr\DoctrineSpecification\SpecificationInterface
+     */
+    public function mergeQueryModifiers(array $queryModifiers): SpecificationInterface
+    {
+        foreach ($queryModifiers as $key => $queryModifier) {
+            if (!($queryModifier instanceof QueryModifierInterface)) {
+                throw new \InvalidArgumentException(sprintf('Query modifier MUST implement %s', QueryModifierInterface::class));
+            }
+            $this->queryModifiers[$key] = $queryModifier;
+        }
+
+        return $this;
     }
 
     /**

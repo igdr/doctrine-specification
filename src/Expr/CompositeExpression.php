@@ -1,4 +1,5 @@
 <?php
+
 namespace Igdr\DoctrineSpecification\Expr;
 
 use Doctrine\ORM\QueryBuilder;
@@ -6,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Expression of Expressions combined by AND or OR operation.
  */
-class CompositeExpression implements ExpressionInterface
+class CompositeExpression extends AbstractExpr
 {
     const TYPE_AND = 'andX';
     const TYPE_OR = 'orX';
@@ -19,7 +20,7 @@ class CompositeExpression implements ExpressionInterface
     /**
      * @var ExpressionInterface[]
      */
-    private $expressions = array();
+    private $expressions = [];
 
     /**
      * @param string $type
@@ -67,7 +68,7 @@ class CompositeExpression implements ExpressionInterface
     public function getExpr(QueryBuilder $queryBuilder, string $dqlAlias): string
     {
         return call_user_func_array(
-            array($queryBuilder->expr(), $this->type),
+            [$queryBuilder->expr(), $this->type],
             array_map(
                 function (ExpressionInterface $expression) use ($queryBuilder, $dqlAlias) {
                     return $expression->getExpr($queryBuilder, $dqlAlias);
@@ -75,5 +76,25 @@ class CompositeExpression implements ExpressionInterface
                 $this->expressions
             )
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDqlAlias(): string
+    {
+        return !empty($this->expressions) ? $this->expressions[0]->getDqlAlias() : '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDqlAlias(string $alias): ExpressionInterface
+    {
+        foreach ($this->expressions as $expression) {
+            $expression->setDqlAlias($alias);
+        }
+
+        return $this;
     }
 }

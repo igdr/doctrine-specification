@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Not
  */
-class Not implements ExpressionInterface
+class Not extends AbstractExpr
 {
     /**
      * @var ExpressionInterface
@@ -28,5 +28,23 @@ class Not implements ExpressionInterface
     public function getExpr(QueryBuilder $queryBuilder, string $dqlAlias): string
     {
         return (string) $queryBuilder->expr()->not($this->expression->getExpr($queryBuilder, $dqlAlias));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDqlAlias(string $alias): ExpressionInterface
+    {
+        $this->expression->setDqlAlias($alias);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDqlAlias(): string
+    {
+        return $this->expression->getDqlAlias();
     }
 }

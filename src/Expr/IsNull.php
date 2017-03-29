@@ -7,17 +7,12 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Adds a condition: field in null
  */
-class IsNull implements ExpressionInterface
+class IsNull extends AbstractExpr
 {
     /**
      * @var string field
      */
     protected $field;
-
-    /**
-     * @var null|string dqlAlias
-     */
-    protected $dqlAlias;
 
     /**
      * @param string      $field

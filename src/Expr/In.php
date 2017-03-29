@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Adds a condition: field in values
  */
-class In implements ExpressionInterface
+class In extends AbstractExpr
 {
     /**
      * @var string field
@@ -18,11 +18,6 @@ class In implements ExpressionInterface
      * @var mixed value
      */
     protected $value;
-
-    /**
-     * @var string dqlAlias
-     */
-    protected $dqlAlias;
 
     /**
      * @param string $field

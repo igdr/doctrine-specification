@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Comparison of a field with a value by the given operator.
  */
-class Comparison implements ExpressionInterface
+class Comparison extends AbstractExpr
 {
     const EQ = '=';
     const NEQ = '<>';
@@ -18,7 +18,7 @@ class Comparison implements ExpressionInterface
     const GTE = '>=';
     const LIKE = 'LIKE';
 
-    private static $operators = array(
+    private static $operators = [
         self::EQ,
         self::NEQ,
         self::LT,
@@ -26,7 +26,7 @@ class Comparison implements ExpressionInterface
         self::GT,
         self::GTE,
         self::LIKE,
-    );
+    ];
 
     /**
      * @var string field
@@ -38,10 +38,6 @@ class Comparison implements ExpressionInterface
      */
     protected $value;
 
-    /**
-     * @var string dqlAlias
-     */
-    protected $dqlAlias;
     /**
      * @var string
      */

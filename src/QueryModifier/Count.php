@@ -3,22 +3,16 @@
 namespace Igdr\DoctrineSpecification\QueryModifier;
 
 use Doctrine\ORM\QueryBuilder;
-use Igdr\DoctrineSpecification\Expr\ExpressionInterface;
 
 /**
  * Adds to the query COUNT construction
  */
-class Count implements QueryModifierInterface
+class Count extends AbstractQueryModifier
 {
     /**
      * @var int limit
      */
     protected $field;
-
-    /**
-     * @var string dqlAlias
-     */
-    protected $dqlAlias;
 
     /**
      * @param string $field

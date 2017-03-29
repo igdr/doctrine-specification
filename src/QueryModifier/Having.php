@@ -8,7 +8,7 @@ use Igdr\DoctrineSpecification\Expr\ExpressionInterface;
 /**
  * Adds to the query HAVING construction
  */
-class Having implements QueryModifierInterface
+class Having extends AbstractQueryModifier
 {
     /**
      * @var ExpressionInterface
@@ -30,4 +30,24 @@ class Having implements QueryModifierInterface
     {
         $queryBuilder->having($this->expression->getExpr($queryBuilder, $dqlAlias));
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDqlAlias(): string
+    {
+        return $this->expression->getDqlAlias();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDqlAlias(string $alias): QueryModifierInterface
+    {
+        $this->expression->setDqlAlias($alias);
+
+        return $this;
+    }
+
+
 }

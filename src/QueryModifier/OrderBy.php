@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Adds to the query ORDER BY construction
  */
-class OrderBy implements QueryModifierInterface
+class OrderBy extends AbstractQueryModifier
 {
     /**
      * @var string field
@@ -18,11 +18,6 @@ class OrderBy implements QueryModifierInterface
      * @var string order
      */
     protected $order;
-
-    /**
-     * @var string dqlAlias
-     */
-    protected $dqlAlias;
 
     /**
      * @param string      $field

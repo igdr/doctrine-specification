@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Adds to the query JOIN construction
  */
-abstract class AbstractJoin implements QueryModifierInterface
+abstract class AbstractJoin extends AbstractQueryModifier
 {
     /**
      * @var string field
@@ -18,11 +18,6 @@ abstract class AbstractJoin implements QueryModifierInterface
      * @var string alias
      */
     private $newAlias;
-
-    /**
-     * @var string dqlAlias
-     */
-    private $dqlAlias;
 
     /**
      * @param string $field

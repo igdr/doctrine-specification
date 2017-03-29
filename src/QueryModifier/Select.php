@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Adds to the query Select construction
  */
-class Select implements QueryModifierInterface
+class Select extends AbstractQueryModifier
 {
     /**
      * @var int limit

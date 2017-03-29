@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Adds to the LIMIT an OFFSET
  */
-class Offset implements QueryModifierInterface
+class Offset extends AbstractQueryModifier
 {
     /**
      * @var int offset

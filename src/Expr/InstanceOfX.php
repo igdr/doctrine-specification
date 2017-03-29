@@ -7,13 +7,8 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Field instance of Class
  */
-class InstanceOfX implements ExpressionInterface
+class InstanceOfX extends AbstractExpr
 {
-    /**
-     * @var null|string dqlAlias
-     */
-    protected $dqlAlias;
-
     /**
      * @var string value
      */

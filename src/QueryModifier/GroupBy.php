@@ -7,17 +7,12 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Adds to the query GROUP BY construction
  */
-class GroupBy implements QueryModifierInterface
+class GroupBy extends AbstractQueryModifier
 {
     /**
      * @var int limit
      */
     protected $field;
-
-    /**
-     * @var string dqlAlias
-     */
-    protected $dqlAlias;
 
     /**
      * @param string $field

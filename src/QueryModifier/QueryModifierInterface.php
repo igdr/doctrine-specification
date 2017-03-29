@@ -16,4 +16,14 @@ interface QueryModifierInterface
      * @return string
      */
     public function modify(QueryBuilder $queryBuilder, string $dqlAlias);
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDqlAlias(): string;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDqlAlias(string $alias): QueryModifierInterface;
 }
