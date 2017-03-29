@@ -2,7 +2,7 @@
 
 namespace Igdr\DoctrineSpecification\Visitor;
 
-use Igdr\DoctrineSpecification\Specification;
+use Igdr\DoctrineSpecification\SpecificationInterface;
 
 /**
  * Visitor
@@ -30,12 +30,12 @@ class Visitor implements VisitorInterface
     }
 
     /**
-     * @param Specification $visitor
-     * @param string        $field
+     * @param SpecificationInterface $visitor
+     * @param string                 $field
      *
      * @return static
      */
-    public static function create(Specification $visitor, string $field)
+    public static function create(SpecificationInterface $visitor, string $field)
     {
         return new static($visitor, $field);
     }
@@ -43,7 +43,7 @@ class Visitor implements VisitorInterface
     /**
      * {@inheritdoc}
      */
-    public function visit(Specification $specification): void
+    public function visit(SpecificationInterface $specification): void
     {
         //add join with the same alias as field
         $specification->innerJoin($this->field, $this->field);
