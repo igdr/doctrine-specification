@@ -20,15 +20,22 @@ class Map implements ResultTransformerInterface
     private $value;
 
     /**
+     * @var bool
+     */
+    private $multi;
+
+    /**
      * Map constructor.
      *
      * @param string $key
      * @param string $value
+     * @param bool   $multi
      */
-    public function __construct(string $key, string $value)
+    public function __construct(string $key, string $value, $multi = true)
     {
         $this->key = $key;
         $this->value = $value;
+        $this->multi = $multi;
     }
 
     /**
@@ -40,7 +47,11 @@ class Map implements ResultTransformerInterface
 
         $values = [];
         foreach ($result as &$item) {
-            $values[$propertyAccessor->getValue($item, $this->key)] = $propertyAccessor->getValue($item, $this->value);
+            if (false === $this->multi) {
+                $values[$propertyAccessor->getValue($item, $this->key)] = $propertyAccessor->getValue($item, $this->value);
+            } else {
+                $values[$propertyAccessor->getValue($item, $this->key)][] = $propertyAccessor->getValue($item, $this->value);
+            }
         }
 
         return $values;
