@@ -258,15 +258,16 @@ class Specification implements SpecificationInterface
 
     /**
      * @param string      $field
+     * @param string      $asName
      * @param string|null $dqlAlias
      *
      * @return $this
      */
-    public function count(string $field = 'id', string $dqlAlias = null)
+    public function count(string $field = 'id', string $asName = null, string $dqlAlias = null)
     {
         $key = sprintf('count_%s', $field);
         if (false === isset($this->queryModifiers[$key])) {
-            $this->queryModifiers[$key] = new Count($field, $dqlAlias);
+            $this->queryModifiers[$key] = new Count($field, $asName, $dqlAlias);
         }
 
         return $this;
