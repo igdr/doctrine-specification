@@ -50,7 +50,7 @@ class Visitor implements VisitorInterface
 
         //replace dql alias of the visitor's query builder
         $expression = $this->visitor->getWhereExpression();
-        $expression->setDQLAlias($this->field);
+        $expression && $expression->setDQLAlias($this->field);
 
         //set the expression from the visitor to the specification
         $specification->andWhere($expression);
