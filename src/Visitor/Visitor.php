@@ -50,18 +50,23 @@ class Visitor implements VisitorInterface
 
         //replace dql alias of the visitor's query builder
         $expression = $this->visitor->getWhereExpression();
-        $expression && $expression->setDQLAlias($this->field);
+        if ($expression) {
+            $expression->setDQLAlias($this->field);
 
-        //set the expression from the visitor to the specification
-        $specification->andWhere($expression);
-
-        //add to the specification all query modifiers from the visitor
-        foreach ($this->visitor->getQueryModifiers() as $queryModifier) {
-            if ('' === $queryModifier->getDqlAlias()) {
-                $queryModifier->setDqlAlias($this->field);
-            }
+            //set the expression from the visitor to the specification
+            $specification->andWhere($expression);
         }
 
-        $specification->mergeQueryModifiers($this->visitor->getQueryModifiers());
+        //add to the specification all query modifiers from the visitor
+        $modifiers = $this->visitor->getQueryModifiers();
+        if (count($modifiers)) {
+            foreach ($modifiers as $queryModifier) {
+                if ('' === $queryModifier->getDqlAlias()) {
+                    $queryModifier->setDqlAlias($this->field);
+                }
+            }
+
+            $specification->mergeQueryModifiers($this->visitor->getQueryModifiers());
+        }
     }
 }
