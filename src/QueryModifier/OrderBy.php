@@ -40,6 +40,10 @@ class OrderBy extends AbstractQueryModifier
             $dqlAlias = $this->dqlAlias;
         }
 
-        $queryBuilder->addOrderBy(sprintf('%s.%s', $dqlAlias, $this->field), $this->order);
+        if (!empty($dqlAlias)) {
+            $queryBuilder->addOrderBy(sprintf('%s.%s', $dqlAlias, $this->field), $this->order);
+        } else {
+            $queryBuilder->addOrderBy($this->field, $this->order);
+        }
     }
 }
