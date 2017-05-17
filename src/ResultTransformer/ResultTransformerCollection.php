@@ -17,7 +17,7 @@ class ResultTransformerCollection implements ResultTransformerInterface
      */
     public function __construct()
     {
-        $this->transformers = func_get_args();
+        $this->transformers = array_filter(func_get_args());
     }
 
     /**
@@ -36,7 +36,9 @@ class ResultTransformerCollection implements ResultTransformerInterface
                 );
             }
 
-            $transformer->transform($result);
+            $result = $transformer->transform($result);
         }
+
+        return $result;
     }
 }

@@ -85,6 +85,26 @@ class LazySpecificationCollection extends AbstractLazyCollection
     }
 
     /**
+     * @return ResultTransformerInterface
+     */
+    public function getResultTransformer(): ?ResultTransformerInterface
+    {
+        return $this->resultTransformer;
+    }
+
+    /**
+     * @param ResultTransformerInterface $resultTransformer
+     *
+     * @return LazySpecificationCollection
+     */
+    public function setResultTransformer($resultTransformer)
+    {
+        $this->resultTransformer = $resultTransformer;
+
+        return $this;
+    }
+
+    /**
      * {@inheritDoc}
      */
     protected function doInitialize()
