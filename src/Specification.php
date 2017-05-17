@@ -218,9 +218,7 @@ class Specification implements SpecificationInterface
     public function orderBy(string $field, string $order = 'ASC', string $dqlAlias = null)
     {
         $key = sprintf('order_%s', $field);
-        if (false === isset($this->queryModifiers[$key])) {
-            $this->queryModifiers[$key] = new OrderBy($field, $order, $dqlAlias);
-        }
+        $this->queryModifiers[$key] = new OrderBy($field, $order, $dqlAlias);
 
         return $this;
     }
@@ -234,9 +232,7 @@ class Specification implements SpecificationInterface
     public function groupBy(string $field, string $dqlAlias = null)
     {
         $key = sprintf('group_%s', $field);
-        if (false === isset($this->queryModifiers[$key])) {
-            $this->queryModifiers[$key] = new GroupBy($field, $dqlAlias);
-        }
+        $this->queryModifiers[$key] = new GroupBy($field, $dqlAlias);
 
         return $this;
     }
@@ -249,9 +245,7 @@ class Specification implements SpecificationInterface
     public function having(ExpressionInterface $expression)
     {
         $key = sprintf('having_%s', $expression);
-        if (false === isset($this->queryModifiers[$key])) {
-            $this->queryModifiers[$key] = new Having($expression);
-        }
+        $this->queryModifiers[$key] = new Having($expression);
 
         return $this;
     }
@@ -266,9 +260,7 @@ class Specification implements SpecificationInterface
     public function count(string $field = 'id', string $asName = null, string $dqlAlias = null)
     {
         $key = sprintf('count_%s', $field);
-        if (false === isset($this->queryModifiers[$key])) {
-            $this->queryModifiers[$key] = new Count($field, $asName, $dqlAlias);
-        }
+        $this->queryModifiers[$key] = new Count($field, $asName, $dqlAlias);
 
         return $this;
     }
@@ -322,9 +314,10 @@ class Specification implements SpecificationInterface
     private function join(string $type, string $field, string $newAlias, string $dqlAlias = null, string $condition = null)
     {
         $key = sprintf('join_%s', $field);
-        if (false === isset($this->queryModifiers[$key])) {
-            $this->queryModifiers[$key] = new $type($field, $newAlias, $dqlAlias, $condition);
+        if (true === isset($this->queryModifiers[$key])) {
+            throw new \InvalidArgumentException(sprintf('Join for field "%s" is alredy exist', $field));
         }
+        $this->queryModifiers[$key] = new $type($field, $newAlias, $dqlAlias, $condition);
 
         return $this;
     }
