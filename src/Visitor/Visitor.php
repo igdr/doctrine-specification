@@ -10,7 +10,7 @@ use Igdr\DoctrineSpecification\SpecificationInterface;
 class Visitor implements VisitorInterface
 {
     /**
-     * @var Specification
+     * @var SpecificationInterface
      */
     private $visitor;
     /**

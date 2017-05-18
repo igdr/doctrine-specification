@@ -24,7 +24,7 @@ class SpecificationApplier
 
         //visitors
         $visitors = $specification->getVisitors();
-        foreach ((array) $visitors as $visitor) {
+        foreach ($visitors as $visitor) {
             $visitor->visit($specification);
         }
 

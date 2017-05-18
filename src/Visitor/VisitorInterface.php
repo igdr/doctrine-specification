@@ -11,7 +11,7 @@ use Igdr\DoctrineSpecification\SpecificationInterface;
 interface VisitorInterface
 {
     /**
-     * @param Specification $specification
+     * @param SpecificationInterface $specification
      *
      * @return void
      */

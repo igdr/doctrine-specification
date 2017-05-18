@@ -60,7 +60,7 @@ class EntitySpecificationRepository extends EntityRepository implements EntitySp
         $queryBuilder = $this->createQueryBuilder($this->alias);
 
         //apply specification to the query builder
-        SpecificationApplier::apply($specification, $queryBuilder, $this->getAlias());
+        SpecificationApplier::apply(clone $specification, $queryBuilder, $this->getAlias());
 
         return $queryBuilder;
     }
