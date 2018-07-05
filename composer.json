@@ -17,8 +17,8 @@
     ],
     "require": {
         "php": ">=7.1",
-        "doctrine/orm": ">=2.2.3",
-        "symfony/property-access": "~3"
+        "doctrine/orm": "^2.6",
+        "symfony/property-access": "^4.0"
     },
     "autoload": {
         "psr-4": {
