@@ -25,7 +25,7 @@ class Specification implements SpecificationInterface
     /**
      * @var QueryModifierInterface[]
      */
-    private $queryModifiers;
+    private $queryModifiers = [];
 
     /**
      * @var ExpressionInterface
@@ -35,7 +35,7 @@ class Specification implements SpecificationInterface
     /**
      * @var VisitorInterface[]
      */
-    private $visitors;
+    private $visitors = [];
 
     /**
      * @var ExpressionBuilder
@@ -73,7 +73,7 @@ class Specification implements SpecificationInterface
      */
     public function select(string $select)
     {
-        $key = sprintf('select_%s', $select);
+        $key = \sprintf('select_%s', $select);
         if (false === isset($this->queryModifiers[$key])) {
             $this->queryModifiers[$key] = new Select($select);
         }
@@ -217,7 +217,7 @@ class Specification implements SpecificationInterface
      */
     public function orderBy(string $field, string $order = 'ASC', string $dqlAlias = null)
     {
-        $key = sprintf('order_%s', $field);
+        $key = \sprintf('order_%s', $field);
         $this->queryModifiers[$key] = new OrderBy($field, $order, $dqlAlias);
 
         return $this;
@@ -231,7 +231,7 @@ class Specification implements SpecificationInterface
      */
     public function groupBy(string $field, string $dqlAlias = null)
     {
-        $key = sprintf('group_%s', $field);
+        $key = \sprintf('group_%s', $field);
         $this->queryModifiers[$key] = new GroupBy($field, $dqlAlias);
 
         return $this;
@@ -244,7 +244,7 @@ class Specification implements SpecificationInterface
      */
     public function having(ExpressionInterface $expression)
     {
-        $key = sprintf('having_%s', $expression);
+        $key = \sprintf('having_%s', $expression);
         $this->queryModifiers[$key] = new Having($expression);
 
         return $this;
@@ -259,7 +259,7 @@ class Specification implements SpecificationInterface
      */
     public function count(string $field = 'id', string $asName = null, string $dqlAlias = null)
     {
-        $key = sprintf('count_%s', $field);
+        $key = \sprintf('count_%s', $field);
         $this->queryModifiers[$key] = new Count($field, $asName, $dqlAlias);
 
         return $this;
@@ -282,7 +282,7 @@ class Specification implements SpecificationInterface
      */
     public function getVisitors(): array
     {
-        return (array) $this->visitors;
+        return $this->visitors;
     }
 
     /**
@@ -294,7 +294,10 @@ class Specification implements SpecificationInterface
     {
         foreach ($queryModifiers as $key => $queryModifier) {
             if (!($queryModifier instanceof QueryModifierInterface)) {
-                throw new \InvalidArgumentException(sprintf('Query modifier MUST implement %s', QueryModifierInterface::class));
+                throw new \InvalidArgumentException(\sprintf(
+                    'Query modifier MUST implement %s',
+                    QueryModifierInterface::class
+                ));
             }
             $this->queryModifiers[$key] = $queryModifier;
         }
@@ -313,7 +316,7 @@ class Specification implements SpecificationInterface
      */
     private function join(string $type, string $field, string $newAlias, string $dqlAlias = null, string $condition = null)
     {
-        $key = sprintf('join_%s', $field);
+        $key = \sprintf('join_%s', $field);
         if (true === isset($this->queryModifiers[$key])) {
             throw new \InvalidArgumentException(sprintf('Join for field "%s" is alredy exist', $field));
         }

@@ -44,7 +44,7 @@ doing the query builder work over and over again.)
 
 This is an example of how you use the lib. Say that you want to fetch some Adverts and close them. We should select all Adverts that have their `endDate` in the past. If `endDate` is null make it 4 weeks after the `startDate`.
 
-``` php
+```php
 // Not using the lib
 $qb = $this->em->getRepository('User')
     ->createQueryBuilder('r');
@@ -65,15 +65,17 @@ return $qb->where('r.ended = 0')
     ->getResult();
 ```
 
-``` php
+```php
+use Igdr\DoctrineSpecification\Specification;
+
 // Using the lib
-$spec = Spec::andX(
-    Spec::eq('ended', 0),
-    Spec::orX(
-        Spec::lt('endDate', new \DateTime()),
-        Spec::andX(
-            Spec::isNull('endDate'),
-            Spec::lt('startDate', new \DateTime('-4weeks'))
+$spec = Specification::expr()->andX(
+    Specification::expr()->eq('ended', 0),
+    Specification::expr()->orX(
+        Specification::expr()->lt('endDate', new \DateTime()),
+        Specification::expr()->andX(
+            Specification::expr()->isNull('endDate'),
+            Specification::expr()->lt('startDate', new \DateTime('-4weeks'))
         )
     )
 );
@@ -86,66 +88,67 @@ Yes, it looks pretty much the same. But the later is reusable. Say you want anot
 
 #### Doctrine Specification
 
-``` php
-class AdvertsWeShouldClose extends BaseSpecification
+```php
+/**
+ * Class AdvertsWeShouldCloseSpecification
+ */
+class AdvertsWeShouldCloseSpecification extends Specification
 {
-    public function getSpec()
+    /**
+     * {@inheritdoc}
+     */
+    public static function create()
     {
-        return Spec::andX(
-            Spec::eq('ended', 0),
-            Spec::orX(
-                Spec::lt('endDate', new \DateTime()),
-                Spec::andX(
-                    Spec::isNull('endDate'),
-                    Spec::lt('startDate', new \DateTime('-4weeks'))
+        return new self();
+    }
+
+    /**
+     * @param ExpressionInterface $spec
+     *
+     * @return $this
+     */
+    public function applyWhere(ExpressionInterface $spec)
+    {
+        $this->andWhere($spec);
+
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $startDate
+     *
+     * @return $this
+     */
+    public function applyTimeFilter(\DateTime $startDate)
+    {
+        $spec = self::expr()->andX(
+            self::expr()->eq('ended', 0),
+            self::expr()->orX(
+                self::expr()->lt('endDate'),
+                self::expr()->andX(
+                    self::expr()->isNull('endDate'),
+                    self::expr()->lt('startDate', $startDate)
                 )
             )
         );
+
+        $this->andWhere($spec);
+
+        return $this;
     }
 }
 
-class OwnedByCompany extends BaseSpecification
-{
-    private $companyId;
+$spec = AdvertsWeShouldCloseSpecification::create()->applyTimeFilter(new \DateTime('-4weeks')); 
 
-    public function __construct(Company $company, $dqlAlias = null)
-    {
-        parent::__construct($dqlAlias);
-        $this->companyId = $company->getId();
-    }
-
-    public function getSpec()
-    {
-        return Spec::andX(
-            Spec::join('company', 'c'),
-            Spec::eq('id', $this->companyId, 'c')
-        );
-    }
-}
-
-class SomeService
-{
-    /**
-     * Fetch Adverts that we should close but only for a specific company
-     */
-    public function myQuery(Company $company)
-    {
-        $spec = Spec::andX(
-            new AdvertsWeShouldClose(),
-            new OwnedByCompany($company)
-        );
-
-        return $this->em->getRepository('RecruitmentBundle:Advert')->match($spec);
-    }
-}
+return $this->em->getRepository('RecruitmentBundle:Advert')->match($spec);
 ```
 
 #### QueryBuilder
 
 If you were about to do the same thing with only the QueryBuilder it would look like this:
 
-``` php
-class AdvertRepository extends EntityRepository
+```php
+class AdvertRepository extends EntitySpecificationRepository
 {
     protected function filterAdvertsWeShouldClose($qb)
     {
@@ -182,6 +185,16 @@ class AdvertRepository extends EntityRepository
 }
 ```
 
+# Configuration
+Edit your doctrine settings to register default repository
+```yaml
+    orm:
+        default_repository_class: Igdr\DoctrineSpecification\EntitySpecificationRepository
+        auto_generate_proxy_classes: "%kernel.debug%"
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+```
+
 The issues with the QueryBuilder implementation are:
 
 * You may only use the filters `filterOwnedByCompany` and `filterAdvertsWeShouldClose` inside AdvertRepository.
@@ -190,7 +203,3 @@ is no way to reuse `filterOwnedByCompany()` in that case.
 * Different parts of the QueryBuilder filtering cannot be composed together, because of the way the API is created.
 Assume we have a filterGroupsForApi() call, there is no way to combine it with another call filterGroupsForPermissions().
 Instead reusing this code will lead to a third method filterGroupsForApiAndPermissions().
-
-## Continue reading
-
-....
